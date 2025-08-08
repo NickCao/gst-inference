@@ -29,5 +29,5 @@ RUN uv pip install --system -r /gst-python-ml/requirements.txt pyopengl
 ENV GST_PLUGIN_PATH=/gst-python-ml/plugins
 RUN --mount=from=builder,src=/SPECS,dst=/SPECS \
   dnf install -y /SPECS/x86_64/gst-shark-0.8.2-1.fc42.x86_64.rpm
-# RUN GST_DEBUG="4" GST_TRACERS="cpuusage;proctime;framerate" \
+# RUN GST_DEBUG="2" GST_TRACERS="cpuusage;proctime;framerate" GST_SHARK_LOCATION="/tmp/trace" \
 #   gst-launch-1.0 v4l2src ! videoconvert ! pyml_yolo model-name=yolo11n ! pyml_overlay ! videoconvert ! autovideosink
