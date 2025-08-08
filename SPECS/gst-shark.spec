@@ -42,14 +42,14 @@ Requires:       %{name}%{?_isa} = %{?epoch:%{epoch}:}%{version}-%{release}
 
 %files
 %license COPYING
+%{_libdir}/gstreamer-1.0/libgstsharktracers.so
 %{_libdir}/gstreamer-1.0/libgstsharktracers.so.*
+%{_libdir}/libgstshark.so
 %{_libdir}/libgstshark.so.*
 
 %files devel
 %{_libdir}/gstreamer-1.0/libgstsharktracers.a
-%{_libdir}/gstreamer-1.0/libgstsharktracers.so
 %{_libdir}/libgstshark.a
-%{_libdir}/libgstshark.so
 
 %changelog
 * Thu Aug 07 2025 Super User
