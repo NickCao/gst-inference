@@ -35,7 +35,7 @@ RUN git clone --depth 1 https://github.com/collabora/gst-python-ml.git /gst-pyth
 RUN uv pip install --system -r /gst-python-ml/requirements.txt pyopengl
 ENV GST_PLUGIN_PATH=/gst-python-ml/plugins
 RUN --mount=from=builder,src=/SPECS,dst=/SPECS \
-  dnf install -y /SPECS/x86_64/gst-shark-0.8.2-1.fc42.x86_64.rpm
+  dnf install -y /SPECS/*/gst-shark-0.8.2-1.*.rpm
 
 RUN curl -L 'https://api.ngc.nvidia.com/v2/resources/org/nvidia/deepstream/7.1/files?redirect=true&path=deepstream_sdk_v7.1.0_jetson.tbz2' -o /tmp/deepstream_sdk_v7.1.0_jetson.tbz2 && \
   bsdtar xf /tmp/deepstream_sdk_v7.1.0_jetson.tbz2 -C / && \
