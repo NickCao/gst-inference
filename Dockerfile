@@ -1,4 +1,4 @@
-FROM registry.fedoraproject.org/fedora:42 AS builder
+FROM registry.fedoraproject.org/fedora:41 AS builder
 RUN dnf install -y fedora-packager
 RUN dnf install -y gcc meson \
   "pkgconfig(gio-2.0)" \
@@ -13,21 +13,34 @@ WORKDIR /SPECS
 RUN spectool -g gst-shark.spec
 RUN fedpkg --release f42 local
 
-FROM registry.fedoraproject.org/fedora:42
+FROM registry.fedoraproject.org/fedora:41
 COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /bin/
 RUN dnf install -y \
+  gstreamer1 \
   gstreamer1-plugins-base \
+  gstreamer1-plugins-base-tools \
   gstreamer1-plugins-good \
+  gstreamer1-plugins-bad-free \
+  gstreamer1-plugins-ugly-free \
+  gstreamer1-rtsp-server \
+  python3-devel \
+  python3-pip \
   python3-gstreamer1 \
   gcc \
   cairo-devel \
-  python3-devel \
   cairo-gobject-devel \
+  yaml-cpp \
   git-core
 RUN git clone --depth 1 https://github.com/collabora/gst-python-ml.git /gst-python-ml
 RUN uv pip install --system -r /gst-python-ml/requirements.txt pyopengl
 ENV GST_PLUGIN_PATH=/gst-python-ml/plugins
 RUN --mount=from=builder,src=/SPECS,dst=/SPECS \
   dnf install -y /SPECS/x86_64/gst-shark-0.8.2-1.fc42.x86_64.rpm
+
+RUN curl -L 'https://api.ngc.nvidia.com/v2/resources/org/nvidia/deepstream/7.1/files?redirect=true&path=deepstream_sdk_v7.1.0_jetson.tbz2' -o /tmp/deepstream_sdk_v7.1.0_jetson.tbz2 && \
+  bsdtar xf /tmp/deepstream_sdk_v7.1.0_jetson.tbz2 -C / && \
+  /opt/nvidia/deepstream/deepstream-7.1/install.sh && \
+  rm /tmp/deepstream_sdk_v7.1.0_jetson.tbz2
+
 # RUN GST_DEBUG="2" GST_TRACERS="cpuusage;proctime;framerate" GST_SHARK_LOCATION="/tmp/trace" \
 #   gst-launch-1.0 v4l2src ! videoconvert ! pyml_yolo model-name=yolo11n ! pyml_overlay ! videoconvert ! autovideosink
