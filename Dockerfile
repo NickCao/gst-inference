@@ -43,5 +43,7 @@ RUN curl -L 'https://api.ngc.nvidia.com/v2/resources/org/nvidia/deepstream/7.1/f
   /opt/nvidia/deepstream/deepstream-7.1/install.sh && \
   rm /tmp/deepstream_sdk_v7.1.0_jetson.tbz2
 
+ENV GST_PLUGIN_PATH=/opt/nvidia/deepstream/deepstream/lib/gst-plugins:${GST_PLUGIN_PATH}
+
 # RUN GST_DEBUG="2" GST_TRACERS="cpuusage;proctime;framerate" GST_SHARK_LOCATION="/tmp/trace" \
 #   gst-launch-1.0 v4l2src ! videoconvert ! pyml_yolo model-name=yolo11n ! pyml_overlay ! videoconvert ! autovideosink
