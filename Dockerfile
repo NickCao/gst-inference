@@ -8,7 +8,7 @@ RUN dnf install -y gcc meson \
   "pkgconfig(gstreamer-check-1.0)" \
   "pkgconfig(libgvc)" \
   "pkgconfig(libxml-2.0)"
-COPY ./SPECS /SPECS
+COPY ./gst-shark /SPECS
 WORKDIR /SPECS
 RUN spectool -g gst-shark.spec
 RUN fedpkg --release f42 local
