@@ -30,6 +30,7 @@ RUN dnf install -y \
   cairo-devel \
   cairo-gobject-devel \
   yaml-cpp \
+  bsdtar \
   git-core
 RUN git clone --depth 1 https://github.com/collabora/gst-python-ml.git /gst-python-ml
 RUN uv pip install --system -r /gst-python-ml/requirements.txt pyopengl
