@@ -89,6 +89,7 @@ BuildRequires:  pkgconfig(soundtouch)
 BuildRequires:  pkgconfig(wayland-client)
 BuildRequires:  pkgconfig(wayland-protocols)
 BuildRequires:  pkgconfig(vulkan)
+BuildRequires:  pkgconfig(libonnxruntime)
 %if %{with aom}
 BuildRequires:  pkgconfig(aom)
 %endif
@@ -386,7 +387,6 @@ aren't tested well enough, or the code is not of good enough quality.
     -D neon=disabled \
     -D nvcomp=disabled \
     -D nvdswrapper=disabled \
-    -D onnx=disabled \
     -D openaptx=disabled \
     -D openni2=disabled \
     -D opensles=disabled \
