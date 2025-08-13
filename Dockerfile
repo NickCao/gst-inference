@@ -1,21 +1,23 @@
-FROM registry.fedoraproject.org/fedora:41 AS builder
-RUN dnf install -y fedora-packager
-RUN dnf install -y gcc meson \
-  "pkgconfig(gio-2.0)" \
-  "pkgconfig(glib-2.0)" \
-  "pkgconfig(gstreamer-1.0)" \
-  "pkgconfig(gstreamer-base-1.0)" \
-  "pkgconfig(gstreamer-check-1.0)" \
-  "pkgconfig(libgvc)" \
-  "pkgconfig(libxml-2.0)"
-COPY ./gst-shark /SPECS
-WORKDIR /SPECS
-RUN spectool -g gst-shark.spec
-RUN fedpkg --release f42 local
+# FROM registry.fedoraproject.org/fedora:41 AS builder
+# RUN dnf install -y fedora-packager
+# RUN dnf install -y gcc meson \
+#   "pkgconfig(gio-2.0)" \
+#   "pkgconfig(glib-2.0)" \
+#   "pkgconfig(gstreamer-1.0)" \
+#   "pkgconfig(gstreamer-base-1.0)" \
+#   "pkgconfig(gstreamer-check-1.0)" \
+#   "pkgconfig(libgvc)" \
+#   "pkgconfig(libxml-2.0)"
+# COPY ./gst-shark /SPECS
+# WORKDIR /SPECS
+# RUN spectool -g gst-shark.spec
+# RUN fedpkg --release f42 local
 
 FROM registry.fedoraproject.org/fedora:41
 COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /bin/
+RUN dnf copr enable -y ncaorh/gst-shark
 RUN dnf install -y \
+  gst-shark \
   gstreamer1 \
   gstreamer1-plugins-base \
   gstreamer1-plugins-base-tools \
@@ -36,8 +38,6 @@ RUN dnf install -y \
 RUN git clone --depth 1 https://github.com/collabora/gst-python-ml.git /gst-python-ml
 RUN uv pip install --system -r /gst-python-ml/requirements.txt pyopengl
 ENV GST_PLUGIN_PATH=/gst-python-ml/plugins
-RUN --mount=from=builder,src=/SPECS,dst=/SPECS \
-  dnf install -y /SPECS/*/gst-shark-0.8.2-1.*.rpm
 
 RUN curl -L 'https://api.ngc.nvidia.com/v2/resources/org/nvidia/deepstream/7.1/files?redirect=true&path=deepstream_sdk_v7.1.0_jetson.tbz2' -o /tmp/deepstream_sdk_v7.1.0_jetson.tbz2 && \
   bsdtar xf /tmp/deepstream_sdk_v7.1.0_jetson.tbz2 -C / && \
